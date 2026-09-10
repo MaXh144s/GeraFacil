@@ -84,19 +84,18 @@
   const EXAMPLE_JSON = [
     {
       numero: 1,
-      materia: "Português",
+      materia: "Matemática",
       fonte: "ENEM-2022",
-      // "enunciado" = texto-base (quando houver) + o comando que leva às
-      // alternativas, tudo em um único campo — não só a introdução.
-      enunciado: "Texto-base da questão, quando houver... Segundo o texto, a função da expressão destacada é:",
-      alternativas: ["Alternativa A", "Alternativa B", "Alternativa C", "Alternativa D", "Alternativa E"],
+      enunciado: "Uma empresa possui 120 funcionários, distribuídos entre os setores administrativo, comercial e operacional.",
+      comando: "Considerando essas informações, qual é o percentual de funcionários que trabalham no setor administrativo?",
+      alternativas: ["10%", "20%", "25%", "30%", "40%"],
       correta: 2
     },
     {
       numero: 2,
-      // A ordem entre "imagem" e "enunciado" no JSON não importa — aqui
-      // "enunciado" vem antes de "imagem", ao contrário do exemplo acima.
-      enunciado: "De acordo com o gráfico, a velocidade final do objeto é de aproximadamente:",
+      // A ordem entre os campos no JSON não importa — aqui "comando" vem
+      // antes de "imagem" e "enunciado", ao contrário do exemplo acima.
+      comando: "De acordo com o gráfico, a velocidade final do objeto é de aproximadamente:",
       imagem: "https://exemplo.com/questao2.png",
       materia: "Física",
       fonte: "ENEM-2023",
@@ -106,9 +105,9 @@
     {
       numero: 3,
       materia: "Literatura",
-      // Sem "fonte" (opcional) e sem texto-base: o comando sozinho já é um
-      // "enunciado" válido — é o formato mais comum quando não há texto de apoio.
-      enunciado: "O eu lírico dirige-se diretamente a seu leitor em:",
+      // Sem "fonte" e sem "enunciado" (ambos opcionais) — quando não há
+      // texto de apoio, só o "comando" já é suficiente.
+      comando: "O eu lírico dirige-se diretamente a seu leitor em:",
       alternativas: ["Alternativa A", "Alternativa B", "Alternativa C", "Alternativa D"],
       correta: 1
     }

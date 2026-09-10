@@ -42,8 +42,8 @@
 
     <details class="import-box">
       <summary>Importar questões (JSON)</summary>
-      <p class="import-hint">Cole um array de questões no formato aceito (veja "Ver exemplo"). Cada questão precisa ter "enunciado" e/ou "imagem" — a ordem entre esses dois campos no JSON não importa. O "enunciado" deve conter o texto-base (se houver) já junto com o comando que leva às alternativas (ex.: "Segundo o texto, a função da oração destacada é..."); quando não há texto de apoio, o comando sozinho já é um enunciado válido (ex.: "O eu lírico dirige-se diretamente a seu leitor em:"). "fonte" é opcional. Campos inválidos ou ausentes serão reportados abaixo.</p>
-      <textarea id="import-textarea" rows="8" placeholder='[{"numero": 1, "materia": "Matemática", "enunciado": "...", "alternativas": ["...","...","...","...","..."], "correta": 0}]'></textarea>
+      <p class="import-hint">Cole um array de questões no formato aceito (veja "Ver exemplo"). "comando" é obrigatório — é o que o aluno precisa responder (ex.: "Considerando essas informações, qual é o percentual..."). "enunciado" (texto de apoio) e "imagem" são opcionais e independentes — pode ter só um dos dois, os dois, ou nenhum, se o "comando" já se basta sozinho. A ordem dos campos no JSON não importa. "fonte" é opcional. Campos inválidos ou ausentes serão reportados abaixo.</p>
+      <textarea id="import-textarea" rows="8" placeholder='[{"numero": 1, "materia": "Matemática", "enunciado": "...", "comando": "...", "alternativas": ["...","...","...","...","..."], "correta": 0}]'></textarea>
       <div class="import-actions">
         <button type="button" id="btn-import" class="btn btn-secondary">Importar</button>
         <button type="button" id="btn-example" class="btn btn-secondary">Ver exemplo</button>
@@ -61,6 +61,7 @@
       <h2 class="question-number" id="question-number"></h2>
       <div class="question-image-wrap" id="question-image-wrap"></div>
       <p class="question-statement" id="question-statement"></p>
+      <p class="question-comando" id="question-comando"></p>
 
       <div class="alternatives" id="alternatives"></div>
     </article>
@@ -105,7 +106,7 @@
       <select id="select-bank-materia">
         <option value="">Todas as matérias</option>
       </select>
-      <input type="search" id="input-bank-search" placeholder="Buscar por enunciado, fonte ou número">
+      <input type="search" id="input-bank-search" placeholder="Buscar por comando, enunciado, fonte ou número">
     </div>
 
     <div class="bank-list" id="bank-list"></div>
@@ -139,8 +140,13 @@
       </div>
 
       <div class="field">
-        <label for="edit-enunciado">Enunciado</label>
-        <textarea id="edit-enunciado" rows="4"></textarea>
+        <label for="edit-enunciado">Enunciado / texto de apoio (opcional)</label>
+        <textarea id="edit-enunciado" rows="4" placeholder="Texto-base da questão, quando houver..."></textarea>
+      </div>
+
+      <div class="field">
+        <label for="edit-comando">Comando da questão</label>
+        <textarea id="edit-comando" rows="2" placeholder='Ex.: "Considerando essas informações, qual é o percentual de..."'></textarea>
       </div>
 
       <div class="field">

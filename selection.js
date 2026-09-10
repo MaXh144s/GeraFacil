@@ -26,10 +26,14 @@ const Selection = (() => {
     ) {
       errors.push(`Item ${index}: campo "correta" ausente ou fora do intervalo de alternativas.`);
     }
-    const hasEnunciado = typeof q.enunciado === 'string' && q.enunciado.trim().length > 0;
-    const hasImagem = typeof q.imagem === 'string' && q.imagem.trim().length > 0;
-    if (!hasEnunciado && !hasImagem) {
-      errors.push(`Item ${index}: precisa ter "enunciado" e/ou "imagem".`);
+    if (!q.comando || typeof q.comando !== 'string' || !q.comando.trim()) {
+      errors.push(`Item ${index}: campo "comando" ausente ou inválido — é o que o aluno deve responder, obrigatório mesmo sem "enunciado".`);
+    }
+    if (q.enunciado != null && typeof q.enunciado !== 'string') {
+      errors.push(`Item ${index}: campo "enunciado", quando presente, precisa ser texto.`);
+    }
+    if (q.imagem != null && typeof q.imagem !== 'string') {
+      errors.push(`Item ${index}: campo "imagem", quando presente, precisa ser uma URL em texto.`);
     }
     return errors;
   }

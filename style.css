@@ -213,11 +213,21 @@ html, body {
 
 .question-statement {
   font-family: var(--serif);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0 0 12px;
+}
+.question-statement:empty { display: none; margin: 0; }
+
+.question-comando {
+  font-family: var(--serif);
+  font-weight: 600;
   font-size: 1.08rem;
   line-height: 1.6;
   margin: 0 0 22px;
 }
-.question-statement:empty { display: none; margin: 0; }
+.question-comando:empty { display: none; margin: 0; }
 
 .alternatives {
   display: flex;
@@ -317,6 +327,14 @@ html, body {
 
 .review-item .rev-statement {
   font-family: var(--serif);
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  margin: 0 0 6px;
+}
+
+.review-item .rev-comando {
+  font-family: var(--serif);
+  font-weight: 600;
   font-size: 1rem;
   margin: 0 0 10px;
 }
@@ -471,6 +489,7 @@ html, body {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
