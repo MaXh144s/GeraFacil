@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banco de Questões</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- TELA INICIAL -->
+  <section id="screen-home" class="screen">
+    <header class="home-header">
+      <h1>Banco de Questões</h1>
+      <p class="subtitle">Pratique e reforce o que ainda precisa de atenção.</p>
+    </header>
+
+    <div class="bank-status" id="bank-status"></div>
+
+    <form id="form-round" class="round-form">
+      <div class="field">
+        <label for="select-materia">Matéria</label>
+        <select id="select-materia">
+          <option value="">Todas as matérias</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="input-count">Quantidade de questões</label>
+        <input type="number" id="input-count" min="1" value="10">
+      </div>
+
+      <button type="submit" id="btn-start" class="btn btn-primary">Nova rodada</button>
+    </form>
+
+    <button type="button" id="btn-bank" class="btn btn-secondary btn-block">Ver questões do banco</button>
+
+    <details class="import-box">
+      <summary>Importar questões (JSON)</summary>
+      <p class="import-hint">Cole um array de questões no formato aceito (veja "Ver exemplo"). Cada questão precisa ter "enunciado" e/ou "imagem" — a ordem entre esses dois campos no JSON não importa. O "enunciado" deve conter o texto-base (se houver) já junto com o comando que leva às alternativas (ex.: "Segundo o texto, a função da oração destacada é..."); quando não há texto de apoio, o comando sozinho já é um enunciado válido (ex.: "O eu lírico dirige-se diretamente a seu leitor em:"). "fonte" é opcional. Campos inválidos ou ausentes serão reportados abaixo.</p>
+      <textarea id="import-textarea" rows="8" placeholder='[{"numero": 1, "materia": "Matemática", "enunciado": "...", "alternativas": ["...","...","...","...","..."], "correta": 0}]'></textarea>
+      <div class="import-actions">
+        <button type="button" id="btn-import" class="btn btn-secondary">Importar</button>
+        <button type="button" id="btn-example" class="btn btn-secondary">Ver exemplo</button>
+        <span id="import-feedback" class="import-feedback"></span>
+      </div>
+    </details>
+  </section>
+
+  <!-- TELA DE RODADA -->
+  <section id="screen-round" class="screen hidden">
+    <div class="round-progress" id="round-progress"></div>
+
+    <article class="question-card" id="question-card">
+      <div class="question-meta" id="question-meta"></div>
+      <h2 class="question-number" id="question-number"></h2>
+      <div class="question-image-wrap" id="question-image-wrap"></div>
+      <p class="question-statement" id="question-statement"></p>
+
+      <div class="alternatives" id="alternatives"></div>
+    </article>
+
+    <div class="round-actions">
+      <button type="button" id="btn-exit-round" class="btn btn-secondary">Sair da rodada</button>
+      <button type="button" id="btn-next" class="btn btn-primary" disabled>Próxima questão</button>
+    </div>
+  </section>
+
+  <!-- TELA DE RESULTADO -->
+  <section id="screen-result" class="screen hidden">
+    <div class="result-card">
+      <p class="result-label">Resultado da rodada</p>
+      <p class="result-score" id="result-score"></p>
+      <p class="result-percent" id="result-percent"></p>
+
+      <div class="result-breakdown">
+        <span id="result-correct"></span>
+        <span id="result-wrong"></span>
+      </div>
+    </div>
+
+    <div class="result-actions">
+      <button type="button" id="btn-review" class="btn btn-secondary">Ver questões</button>
+      <button type="button" id="btn-new-round" class="btn btn-primary">Nova rodada</button>
+    </div>
+
+    <div class="review-list hidden" id="review-list"></div>
+  </section>
+
+  <!-- TELA DO BANCO DE QUESTÕES -->
+  <section id="screen-bank" class="screen hidden">
+    <div class="bank-header">
+      <button type="button" id="btn-bank-back" class="btn btn-secondary btn-small">&larr; Voltar</button>
+      <h2>Banco de questões</h2>
+    </div>
+
+    <p class="bank-hint">As alternativas e a resposta correta não são exibidas aqui — abra "Editar" para ver ou alterar.</p>
+
+    <div class="bank-filters">
+      <select id="select-bank-materia">
+        <option value="">Todas as matérias</option>
+      </select>
+      <input type="search" id="input-bank-search" placeholder="Buscar por enunciado, fonte ou número">
+    </div>
+
+    <div class="bank-list" id="bank-list"></div>
+  </section>
+
+</div>
+
+<!-- MODAL DE EDIÇÃO DE QUESTÃO -->
+<div id="edit-modal" class="modal hidden">
+  <div class="modal-content">
+    <h3>Editar questão</h3>
+    <form id="edit-form">
+      <div class="field-row">
+        <div class="field">
+          <label for="edit-materia">Matéria</label>
+          <input type="text" id="edit-materia">
+        </div>
+        <div class="field">
+          <label for="edit-fonte">Fonte</label>
+          <input type="text" id="edit-fonte">
+        </div>
+        <div class="field field-narrow">
+          <label for="edit-numero">Número</label>
+          <input type="number" id="edit-numero">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="edit-imagem">URL da imagem (opcional)</label>
+        <input type="text" id="edit-imagem" placeholder="https://...">
+      </div>
+
+      <div class="field">
+        <label for="edit-enunciado">Enunciado</label>
+        <textarea id="edit-enunciado" rows="4"></textarea>
+      </div>
+
+      <div class="field">
+        <div class="alt-label-row">
+          <label>Alternativas — marque a correta</label>
+          <button type="button" id="btn-toggle-alt-visibility" class="btn btn-secondary btn-small btn-eye">
+            <span class="eye-icon"></span><span class="eye-label">Ver alternativas</span>
+          </button>
+        </div>
+        <p class="alt-order-hint">A ordem é sorteada cada vez que você abre a edição.</p>
+        <div id="edit-alternatives" class="edit-alternatives"></div>
+        <button type="button" id="btn-edit-add-alt" class="btn btn-secondary btn-small">+ Adicionar alternativa</button>
+      </div>
+
+      <div id="edit-feedback" class="import-feedback"></div>
+
+      <div class="modal-actions">
+        <button type="button" id="btn-edit-cancel" class="btn btn-secondary">Cancelar</button>
+        <button type="submit" id="btn-edit-save" class="btn btn-primary">Salvar alterações</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- LIGHTBOX DE IMAGEM -->
+<div id="lightbox" class="lightbox hidden">
+  <img id="lightbox-img" src="" alt="Imagem ampliada">
+</div>
+
+<script src="storage.js"></script>
+<script src="selection.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
